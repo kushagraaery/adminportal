@@ -1,0 +1,10 @@
+openai==0.28
+streamlit
+pandas
+xlsxwriter
+python-dotenv
+openpyxl
+requests
+schedule
+APScheduler
+plotly
