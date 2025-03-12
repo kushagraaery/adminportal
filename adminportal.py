@@ -7,8 +7,8 @@ import json
 from io import BytesIO
 import os
 from dotenv import load_dotenv
+from datetime import datetime
 
-# Set OpenAI API Key (Replace with your key)
 # Load environment variables
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -41,6 +41,9 @@ def update_excel_in_github(df):
     response = requests.get(BASE_URL, headers=headers)
     sha = response.json().get("sha", "") if response.status_code == 200 else None
     
+    # Add a timestamp column
+    df["Last Updated"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
     # Convert DataFrame to binary Excel content
     output = BytesIO()
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
@@ -49,7 +52,7 @@ def update_excel_in_github(df):
     
     # Prepare API payload
     payload = {
-        "message": "Updated Excel file via Streamlit",
+        "message": "Updated Excel file with timestamp via Streamlit",
         "content": base64.b64encode(file_content).decode("utf-8"),
         "sha": sha
     }
@@ -92,3 +95,5 @@ if st.session_state.df_responses is not None:
     st.dataframe(st.session_state.df_responses)
     if st.button("Update the Database"):
         update_excel_in_github(st.session_state.df_responses)
+
+st.write("updated")
