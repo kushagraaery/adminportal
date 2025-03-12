@@ -74,9 +74,14 @@ def download_excel_from_github(url, file_name):
     response = requests.get(url, headers=headers)
     if response.status_code == 200:
         file_content = base64.b64decode(response.json()["content"])
-        return file_content
+        st.download_button(
+            label=f"Download {file_name}",
+            data=file_content,
+            file_name=file_name,
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
     else:
-        return None
+        st.error(f"Failed to download {file_name}: {response.text}")
 
 # Streamlit UI
 st.title("Admin Portal")
@@ -84,28 +89,8 @@ st.title("Admin Portal")
 st.sidebar.header("Upload Files")
 
 # Download buttons for society and questions Excel files
-society_file_content = download_excel_from_github(BASE_URL_SOCIETY, SOCIETY_FILE)
-questions_file_content = download_excel_from_github(BASE_URL_QUESTIONS, QUESTIONS_FILE)
-
-if society_file_content:
-    st.sidebar.download_button(
-        label=f"Download {SOCIETY_FILE}",
-        data=society_file_content,
-        file_name=SOCIETY_FILE,
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-else:
-    st.sidebar.error(f"Failed to download {SOCIETY_FILE}")
-
-if questions_file_content:
-    st.sidebar.download_button(
-        label=f"Download {QUESTIONS_FILE}",
-        data=questions_file_content,
-        file_name=QUESTIONS_FILE,
-        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-else:
-    st.sidebar.error(f"Failed to download {QUESTIONS_FILE}")
+download_excel_from_github(BASE_URL_SOCIETY, SOCIETY_FILE)
+download_excel_from_github(BASE_URL_QUESTIONS, QUESTIONS_FILE)
 
 society_file = st.sidebar.file_uploader("Upload Society Names (CSV/Excel)", type=["csv", "xlsx"])
 questions_file = st.sidebar.file_uploader("Upload Questions (CSV/Excel)", type=["csv", "xlsx"])
