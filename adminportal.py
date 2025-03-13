@@ -81,7 +81,7 @@ def download_excel_from_github(url, file_name):
 # Streamlit UI
 st.title("Admin Portal")
 
-st.sidebar.header("Upload Files")
+st.sidebar.header("Download Files")
 
 # Download buttons for society and questions Excel files
 society_file_content = download_excel_from_github(BASE_URL_SOCIETY, SOCIETY_FILE)
@@ -106,6 +106,8 @@ if questions_file_content:
     )
 else:
     st.sidebar.error(f"Failed to download {QUESTIONS_FILE}")
+
+st.sidebar.header("Upload Files")
 
 society_file = st.sidebar.file_uploader("Upload Society Names (CSV/Excel)", type=["csv", "xlsx"])
 questions_file = st.sidebar.file_uploader("Upload Questions (CSV/Excel)", type=["csv", "xlsx"])
